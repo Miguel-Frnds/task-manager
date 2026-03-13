@@ -1,7 +1,8 @@
 package br.com.miguel.task_manager.domain.service;
 
-import br.com.miguel.task_manager.api.dto.TaskRequestDTO;
-import br.com.miguel.task_manager.api.dto.TaskResponseDTO;
+import br.com.miguel.task_manager.api.dto.task.TaskRequestDTO;
+import br.com.miguel.task_manager.api.dto.task.TaskResponseDTO;
+import br.com.miguel.task_manager.api.dto.task.TaskUpdateDTO;
 import br.com.miguel.task_manager.domain.entity.Task;
 import br.com.miguel.task_manager.domain.entity.User;
 import br.com.miguel.task_manager.domain.repository.TaskRepository;
@@ -32,49 +33,40 @@ public class TaskService {
         return new TaskResponseDTO(task);
     }
 
-    public TaskResponseDTO update(Long userId, Long taskId, TaskRequestDTO taskDTO) {
-        Task updateTask = getTaskById(taskId);
+    public TaskResponseDTO update(Long userId, Long taskId, TaskUpdateDTO taskDTO) {
+        Task updateTask = getTaskByIdAndUserId(taskId, userId);
 
-        if(updateTask.getUser().getId().equals(userId)) {
-            if(taskDTO.getTitle() != null && !taskDTO.getTitle().isBlank()) {
-                updateTask.setTitle(taskDTO.getTitle());
-            }
-            if(taskDTO.getDescription() != null && !taskDTO.getDescription().isBlank()) {
-                updateTask.setDescription(taskDTO.getDescription());
-            }
-            if(taskDTO.getStatus() != null) {
-                updateTask.setStatus(taskDTO.getStatus());
-            }
-            if(taskDTO.getPriority() != null) {
-                updateTask.setPriority(taskDTO.getPriority());
-            }
-            if(taskDTO.getDueDate() != null) {
-                updateTask.setDueDate(taskDTO.getDueDate());
-            }
-            if(taskDTO.getScheduleDate() != null) {
-                updateTask.setScheduleDate(taskDTO.getScheduleDate());
-            }
-
-            Task task = taskRepository.save(updateTask);
-
-            return new TaskResponseDTO(task);
+        if(taskDTO.getTitle() != null && !taskDTO.getTitle().isBlank()) {
+            updateTask.setTitle(taskDTO.getTitle());
+        }
+        if(taskDTO.getDescription() != null && !taskDTO.getDescription().isBlank()) {
+            updateTask.setDescription(taskDTO.getDescription());
+        }
+        if(taskDTO.getStatus() != null) {
+            updateTask.setStatus(taskDTO.getStatus());
+        }
+        if(taskDTO.getPriority() != null) {
+            updateTask.setPriority(taskDTO.getPriority());
+        }
+        if(taskDTO.getDueDate() != null) {
+            updateTask.setDueDate(taskDTO.getDueDate());
+        }
+        if(taskDTO.getScheduleDate() != null) {
+            updateTask.setScheduleDate(taskDTO.getScheduleDate());
         }
 
-        return null;
+        Task task = taskRepository.save(updateTask);
+
+        return new TaskResponseDTO(task);
     }
 
     public void delete(Long userId, Long taskId) {
-        Task task = getTaskById(taskId);
-
-        if(task.getUser().getId().equals(userId)) {
-            taskRepository.delete(task);
-        } else {
-            throw new RuntimeException("Error");
-        }
+        Task task = getTaskByIdAndUserId(taskId, userId);
+        taskRepository.delete(task);
     }
 
-    private Task getTaskById(Long id){
-        return taskRepository.findById(id)
+    private Task getTaskByIdAndUserId(Long taskId, Long userId){
+        return taskRepository.findByIdAndUserId(taskId, userId)
                 .orElseThrow(() -> new RuntimeException("Task not found."));
     }
 }
