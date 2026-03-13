@@ -1,4 +1,4 @@
-package br.com.miguel.task_manager.api.dto;
+package br.com.miguel.task_manager.api.dto.task;
 
 import br.com.miguel.task_manager.domain.entity.Priority;
 import br.com.miguel.task_manager.domain.entity.Status;
