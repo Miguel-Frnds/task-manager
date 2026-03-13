@@ -1,4 +1,4 @@
-package br.com.miguel.task_manager.api.dto;
+package br.com.miguel.task_manager.api.dto.user;
 
 import br.com.miguel.task_manager.domain.entity.Role;
 import br.com.miguel.task_manager.domain.entity.User;
