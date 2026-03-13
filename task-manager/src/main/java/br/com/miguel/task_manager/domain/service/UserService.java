@@ -1,7 +1,8 @@
 package br.com.miguel.task_manager.domain.service;
 
-import br.com.miguel.task_manager.api.dto.UserRequestDTO;
-import br.com.miguel.task_manager.api.dto.UserResponseDTO;
+import br.com.miguel.task_manager.api.dto.user.UserRequestDTO;
+import br.com.miguel.task_manager.api.dto.user.UserResponseDTO;
+import br.com.miguel.task_manager.api.dto.user.UserUpdateDTO;
 import br.com.miguel.task_manager.domain.entity.User;
 import br.com.miguel.task_manager.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +28,27 @@ public class UserService {
     }
 
     public UserResponseDTO save(UserRequestDTO user){
+        emailAlreadyExists(user.getEmail());
+
         User newUser = new User(user);
         newUser.setCreatedAt(LocalDateTime.now());
         newUser = userRepository.save(newUser);
         return new UserResponseDTO(newUser);
     }
 
-    public UserResponseDTO update(Long id, UserRequestDTO user){
+    public UserResponseDTO update(Long id, UserUpdateDTO user){
         User updateUser = getUserById(id);
 
         updateUser.setUpdatedAt(LocalDateTime.now());
         if(user.getUsername() != null && !user.getUsername().isBlank()) {
             updateUser.setUsername(user.getUsername());
         }
-        if(user.getEmail() != null && !user.getEmail().isBlank()){
+
+        if(user.getEmail() != null && !user.getEmail().isBlank() && !user.getEmail().equals(updateUser.getEmail())){
+            emailAlreadyExists(user.getEmail());
             updateUser.setEmail(user.getEmail());
         }
+
         if(user.getPassword() != null && !user.getPassword().isBlank()){
             updateUser.setPassword(user.getPassword());
         }
@@ -59,5 +65,11 @@ public class UserService {
     public User getUserById(Long id){
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found."));
+    }
+
+    public void emailAlreadyExists(String email){
+        if(userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already exists");
+        }
     }
 }
