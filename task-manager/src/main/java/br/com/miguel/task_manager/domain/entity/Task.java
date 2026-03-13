@@ -1,7 +1,6 @@
 package br.com.miguel.task_manager.domain.entity;
 
-import br.com.miguel.task_manager.api.dto.TaskRequestDTO;
-import br.com.miguel.task_manager.api.dto.TaskResponseDTO;
+import br.com.miguel.task_manager.api.dto.task.TaskRequestDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,11 +31,15 @@ public class Task {
     @Column(length = 100)
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
+
     private LocalDateTime finishedAt;
+
     private LocalDate dueDate;
+
     private LocalDate scheduleDate;
 
     @Enumerated(EnumType.STRING)

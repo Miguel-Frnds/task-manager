@@ -1,7 +1,6 @@
 package br.com.miguel.task_manager.domain.entity;
 
-import br.com.miguel.task_manager.api.dto.UserRequestDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import br.com.miguel.task_manager.api.dto.user.UserRequestDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,15 +30,16 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Task> tasks;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     @PrePersist
