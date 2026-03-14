@@ -1,5 +1,6 @@
 package br.com.miguel.task_manager.domain.service;
 
+import br.com.miguel.task_manager.api.dto.PageDTO;
 import br.com.miguel.task_manager.api.dto.user.UserRequestDTO;
 import br.com.miguel.task_manager.api.dto.user.UserResponseDTO;
 import br.com.miguel.task_manager.api.dto.user.UserUpdateDTO;
@@ -8,10 +9,11 @@ import br.com.miguel.task_manager.domain.repository.UserRepository;
 import br.com.miguel.task_manager.exception.EmailAlreadyExistsException;
 import br.com.miguel.task_manager.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class UserService {
@@ -19,9 +21,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<UserResponseDTO> findAll(){
-        List<User> users = userRepository.findAll();
-        return users.stream().map(UserResponseDTO::new).toList();
+    public PageDTO<UserResponseDTO> findAll(Pageable pageable){
+        Page<User> users = userRepository.findAll(pageable);
+        Page<UserResponseDTO> dtoPage = users.map(UserResponseDTO::new);
+
+        return new PageDTO<>(
+                dtoPage.getContent(),
+                dtoPage.getNumber(),
+                dtoPage.getSize(),
+                dtoPage.getTotalElements(),
+                dtoPage.getTotalPages()
+        );
     }
 
     public UserResponseDTO findUserById(Long id){
