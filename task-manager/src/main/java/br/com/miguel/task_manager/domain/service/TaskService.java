@@ -1,13 +1,18 @@
 package br.com.miguel.task_manager.domain.service;
 
+import br.com.miguel.task_manager.api.dto.PageDTO;
 import br.com.miguel.task_manager.api.dto.task.TaskRequestDTO;
 import br.com.miguel.task_manager.api.dto.task.TaskResponseDTO;
 import br.com.miguel.task_manager.api.dto.task.TaskUpdateDTO;
+import br.com.miguel.task_manager.domain.entity.Priority;
+import br.com.miguel.task_manager.domain.entity.Status;
 import br.com.miguel.task_manager.domain.entity.Task;
 import br.com.miguel.task_manager.domain.entity.User;
 import br.com.miguel.task_manager.domain.repository.TaskRepository;
 import br.com.miguel.task_manager.exception.TaskNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +26,28 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
-    public List<TaskResponseDTO> findAll(Long userId){
-        List<Task> tasks = taskRepository.findByUserId(userId);
-        return tasks.stream().map(TaskResponseDTO::new).toList();
+    public PageDTO<TaskResponseDTO> findAllTasks(Long userId, Status status, Priority priority, Pageable pageable){
+        Page<Task> tasks;
+
+        if(status != null && priority != null){
+            tasks = taskRepository.findByUserIdAndStatusAndPriority(userId, status, priority, pageable);
+        } else if (status != null) {
+            tasks = taskRepository.findByUserIdAndStatus(userId, status, pageable);
+        } else if (priority != null) {
+            tasks = taskRepository.findByUserIdAndPriority(userId, priority, pageable);
+        } else {
+            tasks = taskRepository.findByUserId(userId, pageable);
+        }
+
+        Page<TaskResponseDTO> dtoPage = tasks.map(TaskResponseDTO::new);
+
+        return new PageDTO<>(
+                dtoPage.getContent(),
+                dtoPage.getNumber(),
+                dtoPage.getSize(),
+                dtoPage.getTotalElements(),
+                dtoPage.getTotalPages()
+        );
     }
 
     public TaskResponseDTO save(Long userId, TaskRequestDTO taskDTO){
