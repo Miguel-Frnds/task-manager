@@ -5,6 +5,8 @@ import br.com.miguel.task_manager.api.dto.user.UserResponseDTO;
 import br.com.miguel.task_manager.api.dto.user.UserUpdateDTO;
 import br.com.miguel.task_manager.domain.entity.User;
 import br.com.miguel.task_manager.domain.repository.UserRepository;
+import br.com.miguel.task_manager.exception.EmailAlreadyExistsException;
+import br.com.miguel.task_manager.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,12 +66,12 @@ public class UserService {
 
     public User getUserById(Long id){
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public void emailAlreadyExists(String email){
         if(userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException();
         }
     }
 }

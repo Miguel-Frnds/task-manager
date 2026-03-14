@@ -6,6 +6,7 @@ import br.com.miguel.task_manager.api.dto.task.TaskUpdateDTO;
 import br.com.miguel.task_manager.domain.entity.Task;
 import br.com.miguel.task_manager.domain.entity.User;
 import br.com.miguel.task_manager.domain.repository.TaskRepository;
+import br.com.miguel.task_manager.exception.TaskNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +68,6 @@ public class TaskService {
 
     private Task getTaskByIdAndUserId(Long taskId, Long userId){
         return taskRepository.findByIdAndUserId(taskId, userId)
-                .orElseThrow(() -> new RuntimeException("Task not found."));
+                .orElseThrow(TaskNotFoundException::new);
     }
 }
