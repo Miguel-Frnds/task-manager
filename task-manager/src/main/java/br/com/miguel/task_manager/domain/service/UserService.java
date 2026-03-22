@@ -1,6 +1,7 @@
 package br.com.miguel.task_manager.domain.service;
 
-import br.com.miguel.task_manager.api.dto.PageDTO;
+import br.com.miguel.task_manager.api.dto.common.PageDTO;
+import br.com.miguel.task_manager.api.dto.user.RegisterDTO;
 import br.com.miguel.task_manager.api.dto.user.UserRequestDTO;
 import br.com.miguel.task_manager.api.dto.user.UserResponseDTO;
 import br.com.miguel.task_manager.api.dto.user.UserUpdateDTO;
@@ -11,6 +12,8 @@ import br.com.miguel.task_manager.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -72,6 +75,17 @@ public class UserService {
     public void delete(Long id){
         User user = getUserById(id);
         userRepository.delete(user);
+    }
+
+    public void register(RegisterDTO data){
+        if(userRepository.existsByEmail(data.email())) {
+            throw new EmailAlreadyExistsException();
+        }
+
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        User newUser = new User(data.username(), data.email(), encryptedPassword, data.role());
+
+        userRepository.save(newUser);
     }
 
     public User getUserById(Long id){
