@@ -1,4 +1,4 @@
-package br.com.miguel.task_manager.infra;
+package br.com.miguel.task_manager.infra.web;
 
 import br.com.miguel.task_manager.exception.EmailAlreadyExistsException;
 import br.com.miguel.task_manager.exception.TaskNotFoundException;

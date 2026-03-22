@@ -1,4 +1,4 @@
-package br.com.miguel.task_manager.infra;
+package br.com.miguel.task_manager.infra.web;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
