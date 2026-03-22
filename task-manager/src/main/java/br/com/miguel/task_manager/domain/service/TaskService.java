@@ -1,6 +1,6 @@
 package br.com.miguel.task_manager.domain.service;
 
-import br.com.miguel.task_manager.api.dto.PageDTO;
+import br.com.miguel.task_manager.api.dto.common.PageDTO;
 import br.com.miguel.task_manager.api.dto.task.TaskRequestDTO;
 import br.com.miguel.task_manager.api.dto.task.TaskResponseDTO;
 import br.com.miguel.task_manager.api.dto.task.TaskUpdateDTO;
@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TaskService {
