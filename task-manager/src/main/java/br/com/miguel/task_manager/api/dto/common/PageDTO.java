@@ -1,4 +1,4 @@
-package br.com.miguel.task_manager.api.dto;
+package br.com.miguel.task_manager.api.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
