@@ -1,6 +1,6 @@
 package br.com.miguel.task_manager.api.controller;
 
-import br.com.miguel.task_manager.api.dto.PageDTO;
+import br.com.miguel.task_manager.api.dto.common.PageDTO;
 import br.com.miguel.task_manager.api.dto.user.UserRequestDTO;
 import br.com.miguel.task_manager.api.dto.user.UserResponseDTO;
 import br.com.miguel.task_manager.api.dto.user.UserUpdateDTO;
